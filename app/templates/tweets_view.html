@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h2> Click the below button to view latest tweet </h2>
+	<form action="" method="post">
+	{{ form.hidden_tag() }}	
+	<p> select any particular tweet range(1-n) to view, or just click View to see the latest tweet</p>
+	<p> {{ form.Dropdown() }} </p>
+	<p>
+		{{ form.View() }}
+	</p>
+	<br>
+	</form>
+	<h2> Tweets Posted are:</h2>
+	<p>
+		<ul>
+		{% for txt in text %}
+             <li>{{ txt }}</li>
+        {% endfor %}
+        </ul>
+	</p>
+	</form>
+{% endblock %}

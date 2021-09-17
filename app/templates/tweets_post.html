@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h2>Post Tweets Here!</h2>
+	<form action="" method="post">
+	{{ form.hidden_tag() }}
+	<p>
+		{{ form.textbox.label }} <br>
+		{{ form.textbox(cols="50", rows="15") }}
+	</p>
+	<p>
+		{{ form.Post() }}
+	</p>
+	</form>
+	<br>
+	<h2> {{ text }} </h2>
+{% endblock %}

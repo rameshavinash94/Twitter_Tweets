@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h2> Click the below button to Delete tweets or select the range to delete </h2>
+	<form action="" method="post">
+	{{ form.hidden_tag() }}	
+	<p> {{ form.Dropdown() }} </p>
+	<br>
+	<p>
+		{{ form.Delete() }}
+	</p>
+	</form>
+	<p>
+		<h3>{{ text }}</h3>
+	</p>
+	</form>
+{% endblock %}
