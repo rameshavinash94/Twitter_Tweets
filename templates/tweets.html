@@ -1,0 +1,42 @@
+<!--
+#------------------------------------------------------------
+# UI to support Twitter service to programmatically
+# create, retrieve and delete a Tweet using Twitter APIs
+# Author: charu.cheema@sjsu.edu
+#------------------------------------------------------------
+-->
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Twitter Assignment</title>
+		<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+	</head>
+	<body>
+		<div class="container">
+			 <div class="row">
+				 <div class="p-3">
+					 <form class="form-inline" method="POST" action="{{ url_for('post_tweet') }}">
+						 <input class="form-control" type="text" name="new_tweet">
+						 <button class="btn btn-primary" type="submit">Post a new tweet</button>
+					 </form>
+				 </div>
+				 <div class="col-md-6">
+					 {% for tweet in tweets %}
+					 <div class="card mt-2">
+						 <div class="card-body">
+							 <div class="card-text">
+								 <div class="p-3">
+									 {{ tweet._json.text }}
+									 <form class="form-inline" method="POST" action="{{ url_for('delete_tweet') }}">
+										 <button class="btn btn-primary" type="submit" name="to_be_deleted" value="{{ tweet._json.id }}">Delete!</button>
+									 </form>
+								 </div>
+							 </div>
+						 </div>
+					 </div>
+					 {% endfor %}
+				 </div>
+			 </div>
+		 </div>
+	</body>
+</html>
