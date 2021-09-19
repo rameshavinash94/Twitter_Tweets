@@ -36,14 +36,5 @@ def Tweet_view():
 				flash("An exception occurred")
 	return render_template('tweets_view.html',form=form,text=text)
 
-@app.route('/tweets_delete',methods=['GET','POST'])
-def Tweet_Delete():
-	form = PostForm()
-	text=''
-	if request.method == 'POST':
-		if request.form['Delete']:
-			try:
-				text=Twitter().delete_tweets(form.Dropdown.data)
-			except:
-				flash("An exception occurred")
-	return render_template('tweets_delete.html',form=form,text=text)
+
+#removed delete route
