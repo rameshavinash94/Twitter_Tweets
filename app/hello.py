@@ -29,12 +29,4 @@ class Twitter:
                         return self.temp[:]
 
 #delete tweets
-        def delete_tweets(self,items='1'):
-                if (items != 'All'):
-                        for status in self.cursor.items(int(items)):
-                                self.api.destroy_status(status.id)
-                        return "success deleted mentioned tweets"
-                else:
-                        for status in self.cursor.items():
-                                self.api.destroy_status(status.id)
-                        return "success deleted All tweets"
+#removed delete script
