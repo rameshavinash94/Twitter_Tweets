@@ -53,10 +53,10 @@ def delete_tweet():
 # This method posts a new tweet
 @app.route('/tweets', methods=['POST'])
 def post_new_tweet():
-		new_tweet_status = ""
-		new_tweet_status = request.form['new_tweet']
-		api.update_status(status = new_tweet_status)
-		return redirect(url_for('tweets'))
+	new_tweet_status = ""
+	new_tweet_status = request.form['new_tweet']
+	api.update_status(status = new_tweet_status)
+	return redirect(url_for('tweets'))
 
 # Main method handles authentication based of keys and secrets in config.py
 # Author: charu.cheema@sjsu.edu
