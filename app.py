@@ -6,7 +6,7 @@
 # Authors: charu.cheema@sjsu.edu, poojashree.ns@sjsu.edu, avinash.ramesh@sjsu.edu , nishamohan.devadiga@sjsu.edu
 # -------------------------------------------------------------------------------------------------------------
 
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 import tweepy
 import re
 
@@ -14,12 +14,13 @@ app = Flask(__name__)
 app.config.from_object('config')
 
 # Default landing page
-
+# Author: charu.cheema@sjsu.edu
 @app.route('/')
 def default_redirect():
     return redirect(url_for('tweets'))
 
 # This method fetches tweets for specified user
+# Author: charu.cheema@sjsu.edu
 @app.route('/tweets', methods=['GET'])
 def tweets():
     public_tweets = api.user_timeline(app.config["TWITTER_APP_USER_ID"])
@@ -49,20 +50,25 @@ def delete_tweet():
     api.destroy_status(to_be_deleted)
     return redirect(url_for('tweets'))
 
-
 # Author: nishamohan.devadiga@sjsu.edu
 # This method posts a new tweet
-
 @app.route('/tweets', methods=['POST'])
 def post_tweet():
     new_tweet = request.form['new_tweet']
-    api.update_status(new_tweet)
-    return redirect(url_for('tweets'))
+    try:
+        api.update_status(new_tweet)
+    except tweepy.TweepError as error:
+        if error.api_code == 187:
+            # Duplicate tweet message
+            flash("Duplicate tweet!!")
+            return redirect(url_for('tweets'))
+        else:
+            raise error
 
+    return redirect(url_for('tweets'))
 
 # Main method handles authentication based of keys and secrets in config.py
 # Author: charu.cheema@sjsu.edu
-
 if __name__ == '__main__':
     auth = tweepy.OAuthHandler(app.config['TWITTER_CONSUMER_KEY'],
                                app.config['TWITTER_CONSUMER_SECRET'])
@@ -74,5 +80,6 @@ if __name__ == '__main__':
         print ('Authentication successful')
     except:
         print ('Authentication Error')
+    app.secret_key = 'randomsecretkey'
 
     app.run(debug=True)

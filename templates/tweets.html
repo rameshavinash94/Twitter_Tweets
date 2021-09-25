@@ -24,6 +24,16 @@
       <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
    </head>
    <body>
+   {% with messages = get_flashed_messages() %}
+      {% if messages %}
+         <script>
+            var messages = {{ messages | safe }};
+            for (var i=0; i<messages.length; i++) {
+               alert(messages[i]);
+            }
+         </script>
+      {% endif %}
+   {% endwith %}
       <div class="container" style="margin-top:5%;">
          <div class="heading">
             <center>
@@ -57,7 +67,7 @@
             </div>
             <div class ="col-sm-12 col-md-6 col-lg-6 ">
                <div>
-                  <form class="form-inline" method="POST" action="{{ url_for('fetch_tweets') }}"> 
+                  <form class="form-inline" method="POST" action="{{ url_for('fetch_tweets') }}">
                      <input class="form-control" type="text" name="key_tweet" style="margin-left:15%;" required/> &nbsp &nbsp <button class="btn btn-primary" type="submit">Fetch Tweets!</button>
                   </form>
                   <br>
