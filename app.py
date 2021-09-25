@@ -49,16 +49,14 @@ def delete_tweet():
     api.destroy_status(to_be_deleted)
     return redirect(url_for('tweets'))
 
-
 # Author: nishamohan.devadiga@sjsu.edu
 # This method posts a new tweet
-
 @app.route('/tweets', methods=['POST'])
-def post_tweet():
-    new_tweet = request.form['new_tweet']
-    api.update_status(new_tweet)
-    return redirect(url_for('tweets'))
-
+def post_new_tweet():
+		new_tweet_status = ""
+		new_tweet_status = request.form['new_tweet']
+		api.update_status(status = new_tweet_status)
+		return redirect(url_for('tweets'))
 
 # Main method handles authentication based of keys and secrets in config.py
 # Author: charu.cheema@sjsu.edu

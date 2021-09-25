@@ -13,7 +13,7 @@
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
       <style>
          body { 
-         background: navy !important;
+         background: rgb(16, 106, 190) !important;
          color: white;
          }
          ::-webkit-input-placeholder {
@@ -32,10 +32,10 @@
          </div>
          <div class="row">
             <div class="col-sm-12  col-md-6 col-lg-6">
-               <form class="form-inline" method="POST" action="{{ url_for('post_tweet') }}">
-                  <textarea class="form-control" maxlength="280" rows="4" cols="30"  name="new_tweet" placeholder="Whats Happening!" style="margin-top:5%;" required></textarea>
+               <form class="form-inline" method="POST" action="{{ url_for('post_new_tweet') }}">
+                  <textarea autocomplete="off" class="form-control" maxlength="280" rows="4" cols="30"  name="new_tweet" id="txtName" placeholder="Whats Happening!" style="margin-top:5%;" ></textarea>
                    &nbsp &nbsp
-                  <button class="btn btn-primary " type="submit">Tweet</button>
+                  <button disabled class="btn btn-primary " id="submit-button" type="submit">Tweet</button>
                </form>
                <br>
                <br>
@@ -58,7 +58,7 @@
             <div class ="col-sm-12 col-md-6 col-lg-6 ">
                <div>
                   <form class="form-inline" method="POST" action="{{ url_for('fetch_tweets') }}"> 
-                     <input class="form-control" type="text" name="key_tweet" style="margin-left:15%;" required/> &nbsp &nbsp <button class="btn btn-primary" type="submit">Fetch Tweets!</button>
+                     <input autocomplete="off" class="form-control" type="text" name="key_tweet" style="margin-left:15%;" required/> &nbsp &nbsp <button class="btn btn-primary" type="submit">Fetch Tweets!</button>
                   </form>
                   <br>
                   <br>
@@ -84,5 +84,20 @@
          </div>
       </div>
       </div>
+      <script>	
+         const submitButton = document.getElementById("submit-button"); 
+         const input = document.getElementById("txtName");
+         input.addEventListener('keyup',(e) => {
+             const value = e.currentTarget.value;
+            submitButton.disabled = false;
+            if (value === "") {
+               submitButton.disabled = true;
+            } 
+
+            if (e.currentTarget.value.length > 280) {
+               submitButton.disabled = true;
+            }
+         });
+    </script>
    </body>
 </html>
