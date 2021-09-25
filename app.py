@@ -6,15 +6,23 @@
 # Authors: charu.cheema@sjsu.edu, poojashree.ns@sjsu.edu, avinash.ramesh@sjsu.edu , nishamohan.devadiga@sjsu.edu
 # -------------------------------------------------------------------------------------------------------------
 
-from flask import Flask, render_template, request, redirect, url_for
+#Author: charu.cheema@sjsu.edu
+from flask import Flask, render_template, request, redirect, url_for,flash
 import tweepy
 import re
 
 app = Flask(__name__)
 app.config.from_object('config')
 
-# Default landing page
+auth = tweepy.OAuthHandler(app.config['TWITTER_CONSUMER_KEY'],
+                               app.config['TWITTER_CONSUMER_SECRET'])
+auth.set_access_token(app.config['TWITTER_ACCESS_TOKEN'],
+                          app.config['TWITTER_ACCESS_TOKEN_SECRET'])
+api = tweepy.API(auth)
 
+
+#Author: charu.cheema@sjsu.edu
+# Default landing page
 @app.route('/')
 def default_redirect():
     return redirect(url_for('tweets'))
@@ -49,30 +57,43 @@ def delete_tweet():
     api.destroy_status(to_be_deleted)
     return redirect(url_for('tweets'))
 
+# This method deletes all user timeline tweet.
+@app.route('/tweet/delete_all', methods=['POST'])
+def delete_all_tweet():
+    try:
+        for status in tweepy.Cursor(api.user_timeline).items():
+            api.destroy_status(status.id)
+    except Exception as e:
+        print("something went wrong!!!".format(e))
+    return redirect(url_for('tweets'))
 
 # Author: nishamohan.devadiga@sjsu.edu
 # This method posts a new tweet
 
 @app.route('/tweets', methods=['POST'])
-def post_tweet():
-    new_tweet = request.form['new_tweet']
-    api.update_status(new_tweet)
+def post_new_tweet():
+    new_tweet_status = ""
+    new_tweet_status = request.form['new_tweet']
+    try:
+         api.update_status(new_tweet_status)
+    except tweepy.TweepError as error:
+        if error.api_code == 187:
+             # Duplicate tweet message
+            flash("Duplicate tweet!!")
+            return redirect(url_for('tweets'))
+        else:
+            raise error 
     return redirect(url_for('tweets'))
-
 
 # Main method handles authentication based of keys and secrets in config.py
 # Author: charu.cheema@sjsu.edu
 
 if __name__ == '__main__':
-    auth = tweepy.OAuthHandler(app.config['TWITTER_CONSUMER_KEY'],
-                               app.config['TWITTER_CONSUMER_SECRET'])
-    auth.set_access_token(app.config['TWITTER_ACCESS_TOKEN'],
-                          app.config['TWITTER_ACCESS_TOKEN_SECRET'])
-    api = tweepy.API(auth)
     try:
         api.verify_credentials()
         print ('Authentication successful')
     except:
         print ('Authentication Error')
+    app.secret_key = 'randomsecretkey'
 
     app.run(debug=True)

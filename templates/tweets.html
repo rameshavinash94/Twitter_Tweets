@@ -13,18 +13,38 @@
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
       <style>
          body { 
-         background: navy !important;
+         background: rgb(16, 106, 190) !important;
          color: white;
          }
          ::-webkit-input-placeholder {
          font-style: italic;
-      }
+           <style>
+        }
+        .overlay {
+          position: fixed;
+          width: 100%;
+          height: 100%;
+          left: 0;
+          top: 0;
+          background: rgba(51,51,51,0.7);
+          z-index: 10;
+         }
       </style>
       <title>Twitter Assignment</title>
       <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
    </head>
    <body>
-      <div class="container" style="margin-top:5%;">
+         {% with messages = get_flashed_messages() %}
+       {% if messages %}
+          <script>
+             var messages = {{ messages | safe }};
+             for (var i=0; i<messages.length; i++) {
+                alert(messages[i]);
+             }
+          </script>
+       {% endif %}
+    {% endwith %}
+      <div class="container" style="margin-top:2%;">
          <div class="heading">
             <center>
                <h1 style="color:white;"> Twitter Tweets</h1>
@@ -32,10 +52,10 @@
          </div>
          <div class="row">
             <div class="col-sm-12  col-md-6 col-lg-6">
-               <form class="form-inline" method="POST" action="{{ url_for('post_tweet') }}">
-                  <textarea class="form-control" maxlength="280" rows="4" cols="30"  name="new_tweet" placeholder="Whats Happening!" style="margin-top:5%;" required></textarea>
+               <form class="form-inline" method="POST" action="{{ url_for('post_new_tweet') }}">
+                   <textarea autocomplete="off" class="form-control" maxlength="280" rows="4" cols="30"  name="new_tweet" id="txtName" placeholder="Whats Happening!" style="margin-top:5%;" required ></textarea>
                    &nbsp &nbsp
-                  <button class="btn btn-primary " type="submit">Tweet</button>
+                  <button disabled class="btn btn-primary " id="submit-button" type="submit">Tweet</button>
                </form>
                <br>
                <br>
@@ -55,34 +75,56 @@
                   </div>
                </div>
             </div>
-            <div class ="col-sm-12 col-md-6 col-lg-6 ">
+            <div class ="col-sm-12 col-md-6 col-lg-6">
                <div>
                   <form class="form-inline" method="POST" action="{{ url_for('fetch_tweets') }}"> 
-                     <input class="form-control" type="text" name="key_tweet" style="margin-left:15%;" required/> &nbsp &nbsp <button class="btn btn-primary" type="submit">Fetch Tweets!</button>
+                     <input autocomplete="off" class="form-control" type="text" name="key_tweet" style="margin-left:15%;" required/> &nbsp &nbsp <button class="btn btn-primary" type="submit">Fetch Tweets!</button>
                   </form>
                   <br>
-                  <br>
-                  <div class="col-md-5">
+                  <div>
                      {% if tweets_view|length >= 1 %}
                      {% for tweet in tweets_view %}
                      <br>
                      <div class="card">
                         <div class="card-body">
-                           <div class="input-group-append">
-                           {{ tweet.text }} &nbsp &nbsp
+                           <div class="input-group-append">{{ tweet.text }} &nbsp &nbsp
                            <form class="form-inline" method="POST" action="{{ url_for('delete_tweet') }}">
                               <button class="btn btn-primary btn-sm" type="submit" name="to_be_deleted" value="{{ tweet.id }}"> <span class="glyphicon glyphicon-trash"></span></button>
                            </form>
                         </div>
                         </div>
-                     </div>
-                  </div>
-                  {% endfor %}
-                  {% endif %}
+                        </div>
+                     {% endfor %}
+                     {% endif %}
+                  </div>    
                </div>
+               <br>
+               <br>
+                   <div class="position-relative">
+                  <div class="position-absolute top-100 start-50 translate-middle">
+                  <h3> <p style="color:white;">If you wish to delete all Tweets click the below button</p></h3>
+                  <form class="form-inline" method="POST" action="{{ url_for('delete_all_tweet') }}">
+                  <button class="btn btn-primary" type="submit" name="to_be_deleted">Delete All!!!</button>
+                   </form>
+                  </div>
+                  </div>
             </div>
          </div>
       </div>
-      </div>
+      <script> 
+          const submitButton = document.getElementById("submit-button"); 
+          const input = document.getElementById("txtName");
+          input.addEventListener('keyup',(e) => {
+              const value = e.currentTarget.value;
+             submitButton.disabled = false;
+             if (value === "") {
+                submitButton.disabled = true;
+             } 
+
+             if (e.currentTarget.value.length > 280) {
+                submitButton.disabled = true;
+             }
+          });
+     </script>
    </body>
 </html>
