@@ -6,9 +6,6 @@ import requests
 
 class FlaskDeleteTest(unittest.TestCase):
 
-    #Test Twitter api credential ()
-    #write api credentials of whom should be used
-
     # check response whether the server is up/down
     def test1(self):
         res = requests.get('http://localhost:5000/tweets')
